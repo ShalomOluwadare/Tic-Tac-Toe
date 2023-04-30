@@ -5,9 +5,12 @@ const overlay = document.querySelector(".overlay");
 const choiceX = document.querySelector(".choiceX");
 const choiceO = document.querySelector(".choiceO");
 const winDisplay = document.querySelector(".winDisplay");
+const disBox = document.querySelector(".modal2");
+const restartBtn = document.querySelector(".restart");
 let countX = 0;
 let countO = 0;
 let playerChoice;
+let x = 0;
 const gameBoard = (() => {
   const gameboard = [
     ["x", "o", "x"],
@@ -36,11 +39,7 @@ const gameBoard = (() => {
           }
           console.log(countX, countO);
           div.textContent = playerChoice;
-          let cells = document.querySelectorAll(".grid-item");
-          if (isVictory(cells)) {
-            console.log("hello");
-            winDisplay.textContent = `${playerChoice} wins!`;
-          }
+          check();
         });
         display.appendChild(div);
       });
@@ -89,8 +88,27 @@ const gameBoard = (() => {
     }
     return false;
   }
+  function check() {
+    x++;
+    let cells = document.querySelectorAll(".grid-item");
+    if (isVictory(cells)) {
+      console.log("hello");
+      winDisplay.textContent = `${playerChoice} wins!`;
+      displayController.gameOver();
+    } else if (x === 8) {
+      winDisplay.textContent = "draw";
+      displayController.gameOver();
+    }
+  }
 })();
 const displayController = (() => {
+  restartBtn.addEventListener("click", () => {
+    document.location.reload();
+  });
+  function gameOver() {
+    disBox.classList.remove("hidden");
+    overlay.classList.remove("hidden");
+  }
   function openModal() {
     modal.classList.remove("hidden");
     overlay.classList.remove("hidden");
@@ -99,5 +117,5 @@ const displayController = (() => {
     modal.classList.add("hidden");
     overlay.classList.add("hidden");
   }
-  return { openModal, closeModal };
+  return { openModal, closeModal, gameOver };
 })();
